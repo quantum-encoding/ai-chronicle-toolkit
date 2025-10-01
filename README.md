@@ -22,7 +22,6 @@ The AI Chronicle Toolkit is a suite of professional command-line tools designed 
 
 1. **`md2json`** - High-performance C binary for converting AI Chronicle markdown exports to structured JSON
 2. **`aiquery`** - Lightning-fast C binary for searching conversations with fuzzy matching and context
-3. **`server.js`** - Optional Node.js HTTP server that wraps the C tools for browser extension integration
 
 ---
 
@@ -31,7 +30,6 @@ The AI Chronicle Toolkit is a suite of professional command-line tools designed 
 ### Prerequisites
 
 - **macOS / Linux** (Windows support via WSL)
-- **Node.js 14+** (for optional server)
 - **C compiler** (gcc or clang) - if compiling from source
 
 ### Option 1: Download Pre-compiled Binaries (Recommended)
@@ -83,20 +81,6 @@ done
 
 # Output as JSON
 ./aiquery --json "architecture" conversation.json
-```
-
-### Run the HTTP Server (Optional)
-
-For browser extension integration:
-
-```bash
-# Install dependencies (one-time)
-npm install
-
-# Start server
-node server.js
-
-# Server runs on http://localhost:3777
 ```
 
 ---
@@ -162,11 +146,6 @@ for message in data['messages']:
                 └─► aiquery ──► search results
 ```
 
-**For Extension Integration (Optional):**
-```
-Extension ──HTTP──► server.js ──spawn()──► C Tools
-```
-
 ---
 
 ## 🔧 Command Reference
@@ -200,23 +179,6 @@ Options:
   --files-only         Show only filenames
   --version            Show version
   --help               Show help
-```
-
-### `server.js`
-
-HTTP server for browser extension integration.
-
-```bash
-node server.js [OPTIONS]
-
-Options:
-  --port N        Port number (default: 3777)
-  --verbose       Verbose logging
-
-Endpoints:
-  GET  /health    Server status
-  POST /convert   MD → JSON conversion
-  POST /search    Search conversations
 ```
 
 ---
@@ -257,19 +219,6 @@ chmod +x md2json aiquery
 
 # Check they're in your PATH or use ./
 ./md2json --version
-```
-
-### Server won't start
-
-```bash
-# Install dependencies
-npm install
-
-# Check port availability
-lsof -i :3777
-
-# Try different port
-node server.js --port 3778
 ```
 
 ### Compilation errors
