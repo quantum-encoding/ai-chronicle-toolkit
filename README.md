@@ -21,7 +21,9 @@ The AI Chronicle Toolkit is a suite of professional command-line tools designed 
 ### Tools Included
 
 1. **`md2json`** - High-performance C binary for converting AI Chronicle markdown exports to structured JSON
-2. **`aiquery`** - Lightning-fast C binary for searching conversations with fuzzy matching and context
+2. **`md2json_batch`** - Batch converter for processing entire directories of markdown files
+3. **`aiquery`** - Lightning-fast C binary for searching conversations with fuzzy matching and context
+4. **`aiquery_batch`** - Batch search tool for querying multiple files with optional Markdown report export
 
 ---
 
@@ -43,7 +45,7 @@ tar -xzf ai-chronicle-toolkit.tar.gz
 cd ai-chronicle-toolkit
 
 # Make binaries executable
-chmod +x md2json aiquery
+chmod +x md2json md2json_batch aiquery aiquery_batch
 
 # Test
 ./md2json --version
@@ -64,7 +66,10 @@ See [INSTALL.md](INSTALL.md) for detailed compilation instructions.
 # Convert a single conversation
 ./md2json conversation.md > conversation.json
 
-# Batch convert all conversations
+# Batch convert entire directory
+./md2json_batch my_conversations/
+
+# Batch convert all conversations (manual loop)
 for file in *.md; do
   ./md2json "$file" > "${file%.md}.json"
 done
@@ -73,11 +78,17 @@ done
 ### Search Conversations
 
 ```bash
-# Search for a term
+# Search a single file
 ./aiquery "DPDK" conversation.json
 
+# Search entire directory with batch tool
+./aiquery_batch "knowledge graph" my_conversations_json/
+
+# Export search results as Markdown report
+./aiquery_batch -o results.md "architecture" my_conversations_json/
+
 # Search with options
-./aiquery --case-sensitive --limit 20 "knowledge graph" *.json
+./aiquery --case-sensitive --limit 20 "neural networks" *.json
 
 # Output as JSON
 ./aiquery --json "architecture" conversation.json
@@ -109,7 +120,17 @@ done
 ./md2json conversation.md | ./aiquery --json "quantum computing" -
 ```
 
-### Example 3: Integrate with scripts
+### Example 3: Batch process and search a directory
+
+```bash
+# Convert entire directory of markdown files
+./md2json_batch ~/Downloads/ai_conversations/
+
+# Search all converted files and generate report
+./aiquery_batch -o search_results.md "machine learning" ~/Downloads/ai_conversations_json/
+```
+
+### Example 4: Integrate with scripts
 
 ```python
 import subprocess
@@ -164,6 +185,23 @@ Options:
   --help        Show help
 ```
 
+### `md2json_batch`
+
+Batch convert entire directories of markdown files to JSON.
+
+```bash
+md2json_batch <directory>
+
+Description:
+  Processes all .md files in a directory and creates a corresponding
+  _json directory with converted .json files. Automatically handles
+  both ChatGPT and Claude export formats.
+
+Example:
+  ./md2json_batch my_conversations/
+  # Creates my_conversations_json/ with all converted files
+```
+
 ### `aiquery`
 
 Search AI conversations with context.
@@ -179,6 +217,27 @@ Options:
   --files-only         Show only filenames
   --version            Show version
   --help               Show help
+```
+
+### `aiquery_batch`
+
+Batch search across directories with optional Markdown report export.
+
+```bash
+aiquery_batch [OPTIONS] <search-term> <directory>
+
+Options:
+  -o <file>            Export results as Markdown report
+  -l N                 Limit results per file (default: 10)
+
+Description:
+  Searches all .json files in a directory and aggregates results.
+  With -o flag, generates a formatted Markdown report with file
+  attribution for each match.
+
+Examples:
+  ./aiquery_batch "neural networks" conversations_json/
+  ./aiquery_batch -o report.md -l 20 "DPDK" conversations_json/
 ```
 
 ---
@@ -215,10 +274,11 @@ Benchmarked on M1 MacBook Pro:
 
 ```bash
 # Make sure binaries are executable
-chmod +x md2json aiquery
+chmod +x md2json md2json_batch aiquery aiquery_batch
 
 # Check they're in your PATH or use ./
 ./md2json --version
+./aiquery_batch --help
 ```
 
 ### Compilation errors
