@@ -45,7 +45,7 @@ SearchResult* search_conversation(Conversation *conv, const char *search_term, s
 void free_search_results(SearchResult *results, size_t count);
 
 // Print a search result with context
-void print_search_result(SearchResult *result, int result_number, const char *search_term);
+void print_search_result(SearchResult *result, int result_number, const char *search_term, const char *filename);
 
 // Print conversation statistics
 void print_conversation_stats(Conversation *conv);

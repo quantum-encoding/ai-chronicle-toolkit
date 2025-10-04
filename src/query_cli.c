@@ -113,7 +113,7 @@ int main(int argc, char *argv[]) {
 
     // Print results
     for (size_t i = 0; i < display_count; i++) {
-        print_search_result(&results[i], i + 1, search_term);
+        print_search_result(&results[i], i + 1, search_term, json_file);
     }
 
     // Print footer summary

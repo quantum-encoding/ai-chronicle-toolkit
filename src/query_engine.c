@@ -282,7 +282,7 @@ void free_search_results(SearchResult *results, size_t count) {
 }
 
 // Print a search result with context
-void print_search_result(SearchResult *result, int result_number, const char *search_term) {
+void print_search_result(SearchResult *result, int result_number, const char *search_term, const char *filename) {
     if (!result || !result->entry) return;
 
     ConversationEntry *entry = result->entry;
@@ -291,6 +291,9 @@ void print_search_result(SearchResult *result, int result_number, const char *se
     printf("================================================================================\n");
     printf("Result #%d\n", result_number);
     printf("================================================================================\n");
+    if (filename) {
+        printf("File:     %s\n", filename);
+    }
     printf("Type:     %s\n", entry->type ? entry->type : "Unknown");
     printf("Order:    %d\n", entry->order);
 
